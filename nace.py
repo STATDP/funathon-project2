@@ -2,6 +2,10 @@ import mlflow
 from dotenv import load_dotenv
 import polars as pl
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from torchTextClassifiers.value_encoder import ValueEncoder
+
+
 
 load_dotenv(override=True)
 
@@ -26,5 +30,27 @@ X_val, y_val = val_df["label"].to_numpy(), val_df["code"].to_numpy()
 X_test, y_test = test_df["label"].to_numpy(), test_df["code"].to_numpy()
 
 print(f"Train: {len(train_df)} | Val: {len(val_df)} | Test: {len(test_df)}")
+
+encoder = LabelEncoder()
+encoder.fit(train_df['code'].to_numpy())
+
+all_codes  = set(df['code'])
+train_codes = set(train_df['code'])
+missing = all_codes - train_codes
+
+if missing:
+    print(f"WARNING: {len(missing)} code(s) missing from training set: {missing}")
+else:
+    print(f"OK — all {len(all_codes)} codes appear in the training set.")
+
+# Antal observationer pr. code i træningsdata
+counts = train_df["code"].value_counts()
+
+# Mindste antal
+min_count = counts.min()
+
+print(f"Mindste antal observationer for en code i train: {min_count}")
+
+value_encoder = ValueEncoder(label_encoder=encoder)
 
 print("Done")
