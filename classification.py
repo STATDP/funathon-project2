@@ -80,9 +80,10 @@ ttc.pytorch_model.eval()
 # =========================
 # TEST / EKSEMPEL
 # =========================
-text = "Software udvikling og IT konsulentydelser"
 
-result = predict_text(text, ttc)
 
-print("Input:", text)
+result = predict_text("Sale of dairy", ttc)
+print("Output:", result)
+
+result = predict_text("Goods retail", ttc)
 print("Output:", result)
